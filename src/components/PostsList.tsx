@@ -10,28 +10,27 @@ type PostsListProps = {
   onStopPosting: () => void;
 };
 
+type Post = {
+  body: string;
+  author: string;
+};
+
 function PostsList({ isPosting, onStopPosting }: PostsListProps) {
-  const [enteredBody, setEnteredBody] = useState("");
-  const [enteredAuthor, setEnteredAuthor] = useState("");
+  const [posts, setPosts] = useState<Post[]>([]);
 
-  function bodyChangeHandler(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    setEnteredBody(event.target.value);
-  }
-
-  function authorChangeHandler(event: React.ChangeEvent<HTMLInputElement>) {
-    setEnteredAuthor(event.target.value);
+  function addPostHandler(postData: Post) {
+    setPosts((existingPosts) => [postData, ...existingPosts]);
   }
 
   return (
     <>
       {isPosting && (
         <Modal onClose={onStopPosting}>
-          <NewPost onBodyChange={bodyChangeHandler} onAuthorChange={authorChangeHandler} />
+          <NewPost onCancel={onStopPosting} onAddPost={addPostHandler} />
         </Modal>
       )}
 
       <ul className={classes.posts}>
-        <Post author={enteredAuthor} body={enteredBody} />
         <Post author="author 2" body="test 123" />
       </ul>
     </>
